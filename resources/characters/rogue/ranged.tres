@@ -1,0 +1,36 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://cglar86ayxnaj"]
+
+[ext_resource type="Texture2D" uid="uid://bn6evp3h15nnd" path="res://assets/projectiles/dagger/Dagger_impact.png" id="1_w443y"]
+[ext_resource type="Texture2D" uid="uid://cacxyfrc8o3ee" path="res://assets/projectiles/dagger/Dagger.png" id="2_w1oho"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r1vy5"]
+atlas = ExtResource("1_w443y")
+region = Rect2(0, 0, 18, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kfm3j"]
+atlas = ExtResource("2_w1oho")
+region = Rect2(0, 0, 11, 7)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r1vy5")
+}],
+"loop": false,
+"name": &"impact",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"loop",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kfm3j")
+}],
+"loop": false,
+"name": &"start",
+"speed": 1.0
+}]
