@@ -33,6 +33,11 @@ A 2D Action RPG game featuring procedurally generated worlds, dynamic enemy spaw
 - **Engine**: Godot 4.4
 - **Language**: GDScript
 
+## Assets Credits
+
+- Franuka [https://franuka.itch.io/]
+- pimen [https://pimen.itch.io/]
+
 ---
 
 *Merely a prototype and heavily in development. A playable alpha version will likely look entirely different.*
