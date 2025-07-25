@@ -1,0 +1,160 @@
+[gd_scene load_steps=12 format=3 uid="uid://bro7fbr8u2hu6"]
+
+[ext_resource type="Texture2D" uid="uid://bhvwh0wp48o31" path="res://assets/UIAssets.png" id="1_h6ccw"]
+[ext_resource type="Script" uid="uid://dm4l1bgeldpl7" path="res://scripts/Components/interface.gd" id="1_t5bjp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_smehm"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(35, 724, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ur7pv"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(35, 788, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y4r1p"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(35, 756, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2wvv"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(11, 801, 234, 158)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3v2ag"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(146, 50, 44, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jej6c"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(242, 50, 44, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1ej7"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(194, 50, 44, 14)
+
+[sub_resource type="LabelSettings" id="LabelSettings_f1ej7"]
+font_size = 160
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t5bjp"]
+atlas = ExtResource("1_h6ccw")
+region = Rect2(339, 4, 42, 40)
+
+[node name="Interface" type="Control"]
+z_index = 1
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_t5bjp")
+
+[node name="MenuButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = -104.333
+offset_top = -52.3333
+offset_right = -94.3333
+offset_bottom = -42.3333
+scale = Vector2(0.6, 0.6)
+texture_normal = SubResource("AtlasTexture_smehm")
+texture_pressed = SubResource("AtlasTexture_ur7pv")
+texture_hover = SubResource("AtlasTexture_y4r1p")
+
+[node name="BackgroundDim" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -145.0
+offset_top = -75.0
+offset_right = 146.0
+offset_bottom = 120.0
+color = Color(0, 0, 0, 0.431373)
+
+[node name="Menu" type="TextureRect" parent="."]
+process_mode = 2
+layout_mode = 0
+offset_left = -58.3333
+offset_top = -39.0
+offset_right = 175.667
+offset_bottom = 119.0
+scale = Vector2(0.5, 0.5)
+texture = SubResource("AtlasTexture_d2wvv")
+expand_mode = 2
+
+[node name="ResumeButton" type="TextureButton" parent="Menu"]
+layout_mode = 0
+offset_left = 17.3333
+offset_top = 19.3333
+offset_right = 61.3333
+offset_bottom = 33.3333
+scale = Vector2(2, 1.5)
+texture_normal = SubResource("AtlasTexture_3v2ag")
+texture_pressed = SubResource("AtlasTexture_jej6c")
+texture_hover = SubResource("AtlasTexture_f1ej7")
+
+[node name="Label" type="Label" parent="Menu/ResumeButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = -0.444444
+offset_right = 72.0
+offset_bottom = 22.5556
+scale = Vector2(0.04, 0.04)
+text = "Resume"
+label_settings = SubResource("LabelSettings_f1ej7")
+horizontal_alignment = 1
+
+[node name="SaveButton" type="TextureButton" parent="Menu"]
+layout_mode = 0
+offset_left = 17.3333
+offset_top = 46.6667
+offset_right = 61.3333
+offset_bottom = 60.6667
+scale = Vector2(2, 1.5)
+texture_normal = SubResource("AtlasTexture_3v2ag")
+texture_pressed = SubResource("AtlasTexture_jej6c")
+texture_hover = SubResource("AtlasTexture_f1ej7")
+
+[node name="Label" type="Label" parent="Menu/SaveButton"]
+layout_mode = 0
+offset_left = 15.0001
+offset_top = -0.444458
+offset_right = 374.0
+offset_bottom = 440.556
+scale = Vector2(0.04, 0.04)
+text = "Save
+"
+label_settings = SubResource("LabelSettings_f1ej7")
+horizontal_alignment = 1
+
+[node name="QuitButton" type="TextureButton" parent="Menu"]
+layout_mode = 0
+offset_left = 17.3333
+offset_top = 92.6667
+offset_right = 61.3333
+offset_bottom = 106.667
+scale = Vector2(2, 1.5)
+texture_normal = SubResource("AtlasTexture_3v2ag")
+texture_pressed = SubResource("AtlasTexture_jej6c")
+texture_hover = SubResource("AtlasTexture_f1ej7")
+
+[node name="Label" type="Label" parent="Menu/QuitButton"]
+layout_mode = 0
+offset_left = 15.0001
+offset_top = -0.444458
+offset_right = 374.0
+offset_bottom = 440.556
+scale = Vector2(0.04, 0.04)
+text = "Quit"
+label_settings = SubResource("LabelSettings_f1ej7")
+horizontal_alignment = 1
+
+[node name="PlayerIcon" type="TextureRect" parent="Menu"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 12.0
+offset_right = 174.0
+offset_bottom = 52.0
+texture = SubResource("AtlasTexture_t5bjp")
+
+[node name="TextureRect" type="TextureRect" parent="Menu/PlayerIcon"]
+layout_mode = 0
+offset_left = -3.3334
+offset_top = -2.0
+offset_right = 44.6666
+offset_bottom = 46.0

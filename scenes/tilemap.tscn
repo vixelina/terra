@@ -1,0 +1,227 @@
+[gd_scene load_steps=7 format=3 uid="uid://g66upv1s4a0s"]
+
+[ext_resource type="TileSet" uid="uid://chus3cpg5amur" path="res://resources/tilemaplayer.tres" id="1_kpff1"]
+
+[sub_resource type="GDScript" id="GDScript_5hrsl"]
+script/source = "# LoadWorld.gd
+extends Node2D
+
+var view_radius = Settings.view_radius
+var tile_size = Settings.tile_size
+
+@onready var player = $\"../Player\"
+@onready var tile_map = $\".\"
+
+# noise ------------------------------------------------------------------------
+@export var noise_tile_texture : NoiseTexture2D
+@export var noise_object_texture : NoiseTexture2D
+var tile_noise : Noise
+var object_noise : Noise
+
+var generated_tiles = {}
+var object_positions = {}
+var last_player_tile = Vector2i(0, 0)
+
+# tileset ids ------------------------------------------------------------------
+var tileset_source_id = 1
+var objects_source_id = 0
+
+# layers -----------------------------------------------------------------------
+var water_layer = 0
+var sand_layer = 1
+var grass_layer = 2
+var cliff_layer = 3
+var snow_layer = 4
+var environment_layer = 5
+
+# tilesets ---------------------------------------------------------------------
+var water_tiles_arr = [];	var terrain_water = 0
+var grass_tiles_arr = [];	var terrain_grass = 1
+var cliff_tiles_arr = [];	var terrain_cliff = 2
+var snow_tiles_arr = [];	var terrain_snow = 3
+
+# atlas tiles ------------------------------------------------------------------
+var sand_atlas = [
+	Vector2i(0,4), Vector2i(1,4),
+	Vector2i(0,5), Vector2i(1,5), Vector2i(2,5), Vector2i(3,5), Vector2i(4,5)
+]
+var tree_atlas = [
+	Vector2i(5,4), Vector2i(5,6)
+]
+var bush_atlas = [
+	Vector2i(5,1), Vector2i(6,1), Vector2i(7,1), Vector2i(8,1), Vector2i(5,3), Vector2i(4,7), Vector2i(4,8), Vector2i(10,5)
+]
+var pine_atlas = [
+	Vector2i(5,8), Vector2i(5,10), Vector2i(4,8)
+]
+var rock_atlas = [
+	Vector2i(5,0), Vector2i(6,0), Vector2i(7,0), Vector2i(8,0)
+]
+
+# ------------------------------------------------------------------------------
+
+func _ready():
+	randomize()
+	
+	await get_tree().process_frame
+	player = get_node(\"../Player\")
+	tile_map = self
+	tile_noise = noise_tile_texture.noise
+	object_noise = noise_object_texture.noise
+	last_player_tile = get_player_tile()
+	generate_world()
+	
+# ------------------------------------------------------------------------------
+	
+func _process(_delta):
+	var current_player_tile = get_player_tile()
+	
+	if current_player_tile != last_player_tile:
+		update_visible_tiles(current_player_tile)
+		last_player_tile = current_player_tile
+		
+# ------------------------------------------------------------------------------
+
+func get_player_tile():
+	var player_pos = player.position / tile_size
+	return Vector2i(floor(player_pos.x), floor(player_pos.y))
+	
+# ------------------------------------------------------------------------------
+	
+func update_visible_tiles(player_tile):
+	var new_sand = []
+	var new_grass = []
+	var new_cliff = []
+	var new_snow = []
+	var new_water = []
+	
+# - generate terrain -----------------------------------------------------------
+	for x in range(player_tile.x - view_radius, player_tile.x + view_radius + 1):
+		for y in range(player_tile.y - view_radius, player_tile.y + view_radius + 1):
+			var tile_pos = Vector2i(x, y)
+			if not generated_tiles.has(tile_pos):
+				var tile_noise_value : float = tile_noise.get_noise_2d(x, y)
+				var object_noise_value : float = object_noise.get_noise_2d(x, y)
+
+# ------------- snow -----------------------------------------------------------				
+				if tile_noise_value > 0.40:
+					new_snow.append(tile_pos)
+					snow_tiles_arr.append(tile_pos)
+# ------------- cliff ----------------------------------------------------------
+				if tile_noise_value > 0.20:
+					new_cliff.append(tile_pos)
+					cliff_tiles_arr.append(tile_pos)
+					if tile_noise_value > 0.27 and tile_noise_value < 0.33:
+# ----------------- cliff environment object \"pine\" ----------------------------
+						if object_noise_value > 0.75:
+							var can_place_pine = true
+							for dx in range(2):
+								for dy in range(2):
+									var check_pos = Vector2i(x + dx, y + dy)
+									if object_positions.has(check_pos):
+										can_place_pine = false
+										break
+							if can_place_pine:
+								tile_map.set_cell(environment_layer, Vector2i(x, y), objects_source_id, pine_atlas.pick_random())
+								for dx in range(2): # mark tiles as occupied
+									for dy in range(2):
+										object_positions[Vector2i(x + dx, y + dy)] = true
+# ----------------- cliff environment object \"rock\" ----------------------------
+						if object_noise_value > 0.50:
+							var can_place_rock = true
+							var check_pos = Vector2i(x, y)
+							if object_positions.has(check_pos):
+								can_place_rock = false
+							if can_place_rock:
+								tile_map.set_cell(environment_layer, Vector2i(x, y), objects_source_id, rock_atlas.pick_random())
+								object_positions[Vector2i(x, y)] = true
+# ------------- grass ----------------------------------------------------------
+				if tile_noise_value > -0.32:
+					new_grass.append(tile_pos)
+					grass_tiles_arr.append(tile_pos)
+# ----------------- grass environment object \"tree\" ----------------------------
+					if tile_noise_value > -0.30 and tile_noise_value < 0.10:
+						if object_noise_value > 0.70:
+							var can_place_tree = true
+							for dx in range(2):
+								for dy in range(2):
+									var check_pos = Vector2i(x + dx, y + dy)
+									if object_positions.has(check_pos):
+										can_place_tree = false
+										break
+							if can_place_tree:
+								tile_map.set_cell(environment_layer, Vector2i(x, y), objects_source_id, tree_atlas.pick_random())
+								for dx in range(2): # mark tiles as occupied
+									for dy in range(2):
+										object_positions[Vector2i(x + dx, y + dy)] = true
+# ----------------- grass environment object \"bush\" ----------------------------
+						if object_noise_value > 0.60:
+							var can_place_bush = true
+							var check_pos = Vector2i(x, y)
+							if object_positions.has(check_pos):
+								can_place_bush = false
+							if can_place_bush:
+								tile_map.set_cell(environment_layer, Vector2i(x, y), objects_source_id, bush_atlas.pick_random())
+								object_positions[Vector2i(x, y)] = true
+# ------------- sand -----------------------------------------------------------
+				elif tile_noise_value > -0.35:
+					new_sand.append(tile_pos)
+# ------------- water ----------------------------------------------------------
+				else:
+					new_water.append(tile_pos)
+					water_tiles_arr.append(tile_pos)
+# ------------- mark tile location as generated --------------------------------
+				generated_tiles[tile_pos] = true
+
+# - place tiles from tiles arrays ----------------------------------------------
+	if new_sand.size() > 0: 	# sand
+		for pos in new_sand:
+			var random_sand = sand_atlas[randi() % sand_atlas.size()]
+			tile_map.set_cell(sand_layer, pos, tileset_source_id, random_sand)
+	if new_grass.size() > 0: 	# grass
+		tile_map.set_cells_terrain_connect(grass_layer, new_grass, terrain_grass, 0)
+	if new_cliff.size() > 0:	# cliff
+		tile_map.set_cells_terrain_connect(cliff_layer, new_cliff, terrain_cliff, 0)
+	if new_snow.size() > 0:		# snow
+		tile_map.set_cells_terrain_connect(snow_layer, new_snow, terrain_snow, 0)
+	if new_water.size() > 0:	# water
+		tile_map.set_cells_terrain_connect(water_layer, new_water, terrain_water, 0)
+
+# ------------------------------------------------------------------------------
+
+func generate_world():
+	update_visible_tiles(last_player_tile)
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kpff1"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7dmvr"]
+noise = SubResource("FastNoiseLite_kpff1")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0vx6c"]
+frequency = 0.35
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_d1u8f"]
+noise = SubResource("FastNoiseLite_0vx6c")
+
+[node name="TileMap" type="TileMap"]
+y_sort_enabled = true
+scale = Vector2(0.997745, 1)
+tile_set = ExtResource("1_kpff1")
+format = 2
+layer_0/name = "water"
+layer_0/z_index = -1
+layer_1/name = "sand"
+layer_1/z_index = -1
+layer_2/name = "grass"
+layer_2/z_index = -1
+layer_3/name = "cliff"
+layer_3/z_index = -1
+layer_4/name = "snow"
+layer_4/z_index = -1
+layer_5/name = "environment"
+layer_5/y_sort_enabled = true
+script = SubResource("GDScript_5hrsl")
+noise_tile_texture = SubResource("NoiseTexture2D_7dmvr")
+noise_object_texture = SubResource("NoiseTexture2D_d1u8f")

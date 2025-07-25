@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://chm26qes5gx75"]
+
+[ext_resource type="Script" uid="uid://d35vum0mnm8bv" path="res://scripts/EntityBehaviour/Combat/RangedWeapon.gd" id="1_pfjjk"]
+
+[node name="RangedWeapon" type="Area2D"]
+y_sort_enabled = true
+collision_mask = 3
+script = ExtResource("1_pfjjk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+animation = &""
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 14)

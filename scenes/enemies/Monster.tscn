@@ -1,0 +1,78 @@
+[gd_scene load_steps=11 format=3 uid="uid://cb6mreknssn56"]
+
+[ext_resource type="Script" uid="uid://110oa12hku40" path="res://scripts/EntityBehaviour/Enemies/Monster.gd" id="1_b8lmm"]
+[ext_resource type="PackedScene" uid="uid://d10u26rucpk51" path="res://scenes/Behaviour/state_machine.tscn" id="3_nvqhl"]
+[ext_resource type="Script" uid="uid://c1ai0eupmbt6d" path="res://scripts/EntityBehaviour/Combat/MeleeWeapon.gd" id="4_6v0dd"]
+[ext_resource type="PackedScene" uid="uid://d26jr4ml65dgd" path="res://scenes/Components/HealthComponent.tscn" id="5_tlqbb"]
+[ext_resource type="Texture2D" uid="uid://bhvwh0wp48o31" path="res://assets/UIAssets.png" id="6_pjde0"]
+[ext_resource type="PackedScene" uid="uid://kkniaqjmeo1k" path="res://scenes/Components/HitboxComponent.tscn" id="7_lrew1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kvt6y"]
+radius = 3.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bdx3y"]
+atlas = ExtResource("6_pjde0")
+region = Rect2(1, 212, 46, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2acs"]
+atlas = ExtResource("6_pjde0")
+region = Rect2(49, 212, 46, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d6j1e"]
+size = Vector2(10, 11)
+
+[node name="Monster" type="CharacterBody2D"]
+y_sort_enabled = true
+collision_layer = 2
+collision_mask = 31
+script = ExtResource("1_b8lmm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+animation = &""
+autoplay = "idle_down"
+offset = Vector2(0, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+y_sort_enabled = true
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_kvt6y")
+
+[node name="State Machine" parent="." node_paths=PackedStringArray("initial_state") instance=ExtResource("3_nvqhl")]
+initial_state = NodePath("Chase")
+
+[node name="MeleeWeapon" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+script = ExtResource("4_6v0dd")
+metadata/_custom_type_script = "uid://c1ai0eupmbt6d"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MeleeWeapon"]
+animation = &""
+
+[node name="CollisionPolygon2D_V" type="CollisionPolygon2D" parent="MeleeWeapon"]
+
+[node name="CollisionPolygon2D_H" type="CollisionPolygon2D" parent="MeleeWeapon"]
+
+[node name="HealthComponent" parent="." instance=ExtResource("5_tlqbb")]
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="HealthComponent"]
+offset_left = -6.89844
+offset_top = 3.02344
+offset_right = 39.1016
+offset_bottom = 11.0234
+scale = Vector2(0.3, 0.3)
+value = 100.0
+texture_under = SubResource("AtlasTexture_bdx3y")
+texture_progress = SubResource("AtlasTexture_e2acs")
+metadata/_edit_use_anchors_ = true
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_lrew1")]
+collision_layer = 2
+collision_mask = 16
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(0, -3.5)
+shape = SubResource("RectangleShape2D_d6j1e")
+
+[editable path="State Machine"]

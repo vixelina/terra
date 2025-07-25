@@ -1,0 +1,47 @@
+[gd_scene load_steps=12 format=3 uid="uid://d10u26rucpk51"]
+
+[ext_resource type="Script" uid="uid://b0fjrx3dpgbvl" path="res://scripts/EntityBehaviour/States/StateMachine.gd" id="1_tc4d0"]
+[ext_resource type="Script" uid="uid://b0w0vmc456lmq" path="res://scripts/EntityBehaviour/States/Player/Idle.gd" id="2_wwrbt"]
+[ext_resource type="Script" uid="uid://ds8khiuv7usrl" path="res://scripts/EntityBehaviour/States/Player/Walk.gd" id="3_mbsdn"]
+[ext_resource type="Script" uid="uid://bnl5x1klr4x2s" path="res://scripts/EntityBehaviour/States/Player/Jump.gd" id="4_lh1cf"]
+[ext_resource type="Script" uid="uid://8nrmohjq17xx" path="res://scripts/EntityBehaviour/States/Enemy/Wander.gd" id="5_mbsdn"]
+[ext_resource type="Script" uid="uid://bdt23ho4isy4j" path="res://scripts/EntityBehaviour/States/Enemy/Chase.gd" id="6_lh1cf"]
+[ext_resource type="Script" uid="uid://b3ll8y1u5xtmc" path="res://scripts/EntityBehaviour/States/Player/Melee.gd" id="7_lh1cf"]
+[ext_resource type="Script" uid="uid://cm3fcqfa7hbls" path="res://scripts/EntityBehaviour/States/Player/Cast.gd" id="8_7n4k1"]
+[ext_resource type="Script" uid="uid://dm56swcl4bni1" path="res://scripts/EntityBehaviour/States/Hit.gd" id="9_gcpxu"]
+[ext_resource type="Script" uid="uid://bamigbsxqqsgl" path="res://scripts/EntityBehaviour/States/Die.gd" id="10_6rpf7"]
+[ext_resource type="Script" uid="uid://bmhmredltv7dx" path="res://scripts/EntityBehaviour/States/Enemy/Attack.gd" id="11_wkpy6"]
+
+[node name="State Machine" type="Node"]
+script = ExtResource("1_tc4d0")
+
+[node name="Walk" type="Node" parent="."]
+script = ExtResource("3_mbsdn")
+
+[node name="Jump" type="Node" parent="."]
+script = ExtResource("4_lh1cf")
+
+[node name="Idle" type="Node" parent="."]
+script = ExtResource("2_wwrbt")
+
+[node name="Wander" type="Node" parent="."]
+script = ExtResource("5_mbsdn")
+
+[node name="Chase" type="Node" parent="."]
+script = ExtResource("6_lh1cf")
+
+[node name="Melee" type="Node" parent="."]
+script = ExtResource("7_lh1cf")
+
+[node name="Cast" type="Node" parent="."]
+script = ExtResource("8_7n4k1")
+
+[node name="Hit" type="Node" parent="."]
+script = ExtResource("9_gcpxu")
+metadata/_custom_type_script = "uid://dm56swcl4bni1"
+
+[node name="Die" type="Node" parent="."]
+script = ExtResource("10_6rpf7")
+
+[node name="Attack" type="Node" parent="."]
+script = ExtResource("11_wkpy6")

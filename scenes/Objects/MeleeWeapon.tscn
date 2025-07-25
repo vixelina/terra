@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bj1b6co3plou2"]
+
+[ext_resource type="Script" uid="uid://c1ai0eupmbt6d" path="res://scripts/EntityBehaviour/Combat/MeleeWeapon.gd" id="1_x2f6h"]
+
+[node name="MeleeWeapon" type="Area2D"]
+collision_mask = 3
+script = ExtResource("1_x2f6h")

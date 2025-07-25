@@ -1,0 +1,36 @@
+[gd_scene load_steps=10 format=3 uid="uid://b5yuu1yeycxpl"]
+
+[ext_resource type="Script" uid="uid://djovlp5eaxl35" path="res://scripts/game.gd" id="1_iywne"]
+[ext_resource type="PackedScene" uid="uid://g66upv1s4a0s" path="res://scenes/tilemap.tscn" id="2_p57ef"]
+[ext_resource type="Script" uid="uid://dwtxn4qyl5r77" path="res://scripts/World.gd" id="3_u5sy4"]
+[ext_resource type="PackedScene" uid="uid://bfderlh2rvnsf" path="res://scenes/player.tscn" id="4_gee14"]
+[ext_resource type="Script" uid="uid://d3vkiqk4uiytx" path="res://scripts/EntityBehaviour/MonsterSpawner.gd" id="5_0tnpc"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_fc0e3"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7jktm"]
+noise = SubResource("FastNoiseLite_fc0e3")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7jktm"]
+frequency = 0.35
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_eow3j"]
+noise = SubResource("FastNoiseLite_7jktm")
+
+[node name="Game" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_iywne")
+
+[node name="TileMap" parent="." instance=ExtResource("2_p57ef")]
+layer_5/tile_data = PackedInt32Array(65536, 4, 0)
+script = ExtResource("3_u5sy4")
+noise_tile_texture = SubResource("NoiseTexture2D_7jktm")
+noise_object_texture = SubResource("NoiseTexture2D_eow3j")
+
+[node name="Player" parent="." instance=ExtResource("4_gee14")]
+y_sort_enabled = true
+
+[node name="MonsterSpawner" type="Node2D" parent="." groups=["MonsterSpawner"]]
+y_sort_enabled = true
+script = ExtResource("5_0tnpc")

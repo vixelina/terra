@@ -1,0 +1,83 @@
+[gd_scene load_steps=15 format=3 uid="uid://bfderlh2rvnsf"]
+
+[ext_resource type="Script" uid="uid://c3ka0rkl00ne4" path="res://scripts/EntityBehaviour/Player.gd" id="1_onrkg"]
+[ext_resource type="SpriteFrames" uid="uid://0p7i7g1bpb1m" path="res://resources/player.tres" id="2_qhqgy"]
+[ext_resource type="PackedScene" uid="uid://d10u26rucpk51" path="res://scenes/Behaviour/state_machine.tscn" id="3_qhqgy"]
+[ext_resource type="PackedScene" uid="uid://bj1b6co3plou2" path="res://scenes/Objects/MeleeWeapon.tscn" id="4_fjrip"]
+[ext_resource type="PackedScene" uid="uid://chm26qes5gx75" path="res://scenes/Objects/ProjectileWeapon.tscn" id="5_qlg0r"]
+[ext_resource type="Texture2D" uid="uid://cacxyfrc8o3ee" path="res://assets/projectiles/dagger/Dagger.png" id="6_d2wvv"]
+[ext_resource type="PackedScene" uid="uid://d26jr4ml65dgd" path="res://scenes/Components/HealthComponent.tscn" id="6_fjrip"]
+[ext_resource type="Texture2D" uid="uid://bn6evp3h15nnd" path="res://assets/projectiles/dagger/Dagger_impact.png" id="7_3v2ag"]
+[ext_resource type="PackedScene" uid="uid://kkniaqjmeo1k" path="res://scenes/Components/HitboxComponent.tscn" id="7_smehm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
+radius = 1.36364
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4ail"]
+atlas = ExtResource("6_d2wvv")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a38lo"]
+atlas = ExtResource("7_3v2ag")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a38lo"]
+size = Vector2(9.5, 2)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fjrip"]
+size = Vector2(10, 14)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 13
+script = ExtResource("1_onrkg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 5)
+sprite_frames = ExtResource("2_qhqgy")
+animation = &"idle_down"
+autoplay = "idle_down"
+offset = Vector2(0, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5.25)
+rotation = 1.5708
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_qhqgy")
+
+[node name="Camera" type="Camera2D" parent="."]
+scale = Vector2(3, 3)
+zoom = Vector2(3, 3)
+position_smoothing_speed = 1.0
+
+[node name="State Machine" parent="." node_paths=PackedStringArray("initial_state") instance=ExtResource("3_qhqgy")]
+initial_state = NodePath("Idle")
+
+[node name="Melee" parent="." instance=ExtResource("4_fjrip")]
+position = Vector2(0, 8)
+
+[node name="ProjectileWeapon" parent="." instance=ExtResource("5_qlg0r")]
+
+[node name="Sprite2D" type="Sprite2D" parent="ProjectileWeapon"]
+visible = false
+position = Vector2(16, 0)
+texture = SubResource("AtlasTexture_i4ail")
+
+[node name="Sprite2D_Impact" type="Sprite2D" parent="ProjectileWeapon"]
+visible = false
+position = Vector2(19, 0)
+texture = SubResource("AtlasTexture_a38lo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ProjectileWeapon"]
+visible = false
+position = Vector2(16, 0)
+shape = SubResource("RectangleShape2D_a38lo")
+disabled = true
+
+[node name="HealthComponent" parent="." instance=ExtResource("6_fjrip")]
+
+[node name="HitboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("7_smehm")]
+collision_layer = 16
+collision_mask = 0
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+shape = SubResource("RectangleShape2D_fjrip")

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://douq53hncqoqe"]
+
+[ext_resource type="Script" uid="uid://dfn8nclviw36" path="res://scripts/ObjectBehaviour/damage_zone.gd" id="1_48wo8"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ge0ye"]
+
+[node name="DamageZone" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_48wo8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("WorldBoundaryShape2D_ge0ye")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

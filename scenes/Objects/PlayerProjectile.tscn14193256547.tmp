@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://chm26qes5gx75"]
+
+[ext_resource type="Script" uid="uid://d35vum0mnm8bv" path="res://scripts/EntityBehaviour/Combat/Projectiles/Dagger.gd" id="1_3j67x"]
+[ext_resource type="Texture2D" uid="uid://cacxyfrc8o3ee" path="res://assets/projectiles/dagger/Dagger.png" id="1_x00rb"]
+[ext_resource type="Texture2D" uid="uid://bn6evp3h15nnd" path="res://assets/projectiles/dagger/Dagger_impact.png" id="2_3j67x"]
+[ext_resource type="PackedScene" uid="uid://cvtfxjflcqben" path="res://scenes/Components/ProjectileComponent.tscn" id="4_32jvq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4ail"]
+atlas = ExtResource("1_x00rb")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a38lo"]
+atlas = ExtResource("2_3j67x")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a38lo"]
+size = Vector2(9.5, 2)
+
+[node name="Dagger" type="Area2D"]
+y_sort_enabled = true
+collision_mask = 3
+script = ExtResource("1_3j67x")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(16, 0)
+texture = SubResource("AtlasTexture_i4ail")
+
+[node name="Sprite2D_Impact" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(19, 0)
+texture = SubResource("AtlasTexture_a38lo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(16, 0)
+shape = SubResource("RectangleShape2D_a38lo")
+disabled = true
+
+[node name="ProjectileComponent" parent="." instance=ExtResource("4_32jvq")]
+speed = null
+travel_distance = null
+impact_duration = null
