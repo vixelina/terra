@@ -28,7 +28,7 @@ A 2D Action RPG game featuring procedurally generated worlds, dynamic enemy spaw
 - **Optimized performance** with dynamic loading and despawning
 - **Modular architecture** for easy content expansion
 
-## Technology Stack
+## Development Details
 
 - **Engine**: Godot 4.4
 - **Language**: GDScript
